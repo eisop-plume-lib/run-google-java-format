@@ -31,15 +31,21 @@ script_dir = os.path.dirname(os.path.abspath(__file__))
 # call directly in Python.
 fixup_py = os.path.join(script_dir, "fixup-google-java-format.py")
 
+# java_version_string is either 1.8 or nothing.
+# For JDK  8, `java -version` has the form: openjdk version "1.8.0_292"
+# For JDK 11, `java -version` has the form: openjdk 11.0.11 2021-04-20
+# For JDK 17, `java -version` has the form: java 17 2021-09-14 LTS
 java_version_string = subprocess.check_output(['java', '-version'], stderr=subprocess.STDOUT).decode("utf-8")
-java_version = re.search('version \"(\d+).*\"', java_version_string).groups()[0]
+if debug:
+    print("java_version_string =", java_version_string)
+java_version = re.search('\"(\d+(\.\d+)?).*\"', java_version_string).groups()[0]
 
 ## To use an officially released version.
 ## (Releases appear at https://github.com/google/google-java-format/releases/.)
 # Version 1.3 and earlier do not wrap line comments.
 # Version 1.8 and later require JDK 11 to run and reflow string literals.
 # Version 1.10.0 and later can run under JDK 16.
-gjf_version_default = "1.7" if (java_version == "1.8") else "1.10.0"
+gjf_version_default = "1.7" if (java_version == "1.8") else "1.11.0"
 gjf_version = os.getenv("GJF_VERSION", gjf_version_default)
 gjf_download_prefix = "v" if re.match(r'^1\.1[0-9]', gjf_version) else "google-java-format-"
 gjf_snapshot = os.getenv("GJF_SNAPSHOT", "")

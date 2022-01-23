@@ -113,12 +113,12 @@ def under_git(dir, filename):
 
 # Don't replace local with remote if local is under version control.
 # It would be better to just test whether the remote is newer than local,
-# But raw GitHub URLs don't have the necessary last-modified information.
+# but raw GitHub URLs don't have the necessary last-modified information.
 if not under_git(script_dir, "fixup-google-java-format.py"):
     try:
         urlretrieve(
             "https://raw.githubusercontent.com/" +
-            "plume-lib/run-google-java-format/master/fixup-google-java-format.py", fixup_py)
+            "eisop-plume-lib/run-google-java-format/master/fixup-google-java-format.py", fixup_py)
     except:
         if os.path.exists(fixup_py):
             print("Couldn't retrieve fixup-google-java-format.py; using cached version")

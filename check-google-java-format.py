@@ -65,11 +65,11 @@ def urlretrieve(url, filename):
 
 # Don't replace local with remote if local is under version control.
 # It would be better to just test whether the remote is newer than local,
-# But raw GitHub URLs don't have the necessary last-modified information.
+# but raw GitHub URLs don't have the necessary last-modified information.
 if not under_git(script_dir, "run-google-java-format.py"):
     urlretrieve(
         "https://raw.githubusercontent.com/" +
-        "plume-lib/run-google-java-format/master/run-google-java-format.py", run_py)
+        "eisop-plume-lib/run-google-java-format/master/run-google-java-format.py", run_py)
     os.chmod(run_py, os.stat(run_py).st_mode | stat.S_IXUSR | stat.S_IXGRP | stat.S_IXOTH)
 
 temp_dir = tempfile.mkdtemp(prefix='check-google-java-format-')

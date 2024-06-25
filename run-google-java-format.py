@@ -3,11 +3,10 @@
 This script reformats each file supplied on the command line according to
 the Google Java style (by calling out to the google-java-format program,
 https://github.com/google/google-java-format), but with improvements to
-the formatting of annotations in comments.
+the formatting of type annotations and annotations in comments.
 """
 
 from __future__ import print_function
-import filecmp
 import os
 import re
 import stat
@@ -39,17 +38,21 @@ java_version_string = subprocess.check_output(
 ).decode("utf-8")
 if debug:
     print("java_version_string =", java_version_string)
-java_version = re.search('"(\d+(\.\d+)?).*"', java_version_string).groups()[0]
+java_version = re.search(r'"(\d+(\.\d+)?).*"', java_version_string).groups()[0]
 
 ## To use an officially released version.
-## (Releases appear at https://github.com/google/google-java-format/releases/.)
+## (Releases appear at https://github.com/google/google-java-format/releases/ ,
+## but I keep this in sync with Spotless.)
 # Version 1.3 and earlier do not wrap line comments.
 # Version 1.8 and later require JDK 11 to run, and it reflows string literals.
 # Note that due to changes since GJF 1.7, formatting with GJF 1.7 is
-# inconsistent with later versions of GJF, so you might want to just disable
+# inconsistent with later versions of GJF, so you should disable
 # formatting on Java 8 if you also use a later version of Java.
 # Version 1.10.0 and later can run under JDK 16.
-gjf_version_default = "1.7" if (java_version == "1.8") else "1.15.0"
+## To set this variable:
+## See https://github.com/diffplug/spotless/blob/main/lib/src/main/java/com/diffplug/spotless/java/GoogleJavaFormatStep.java#L75
+## or search for "Bump default google" in https://github.com/diffplug/spotless/blob/main/plugin-gradle/CHANGES.md
+gjf_version_default = "1.7" if (java_version == "1.8") else "1.19.2"
 gjf_version = os.getenv("GJF_VERSION", gjf_version_default)
 gjf_download_prefix = (
     "v" if re.match(r"^1\.1[0-9]", gjf_version) else "google-java-format-"
@@ -96,7 +99,7 @@ else:
         with tempfile.NamedTemporaryFile(dir=script_dir, delete=False) as f:
             urlretrieve(gjf_url, f.name)
             os.rename(f.name, gjf_jar_path)
-    except:
+    except Exception:
         print("Problem while retrieving " + gjf_url + " to " + gjf_jar_path)
         raise
 
@@ -131,7 +134,7 @@ if not under_git(script_dir, "fixup-google-java-format.py"):
             + "eisop-plume-lib/run-google-java-format/master/fixup-google-java-format.py",
             fixup_py,
         )
-    except:
+    except Exception:
         if os.path.exists(fixup_py):
             print("Couldn't retrieve fixup-google-java-format.py; using cached version")
         else:

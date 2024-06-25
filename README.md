@@ -40,12 +40,12 @@ You could invoke this program, for example, in a [git pre-commit hook](#git-pre-
 
 There are two ways to install and use these scripts (see below for integration with [Make](#makefile), [Ant](#ant-buildxml), [Gradle](#gradle-buildgradle), and [Git pre-commit hooks](#git-pre-commit-hook) that you can copy-and-paste into your build file):
  * Clone the repository (run `git clone
-   https://github.com/plume-lib/run-google-java-format.git`) and run the
+   https://github.com/eisop-plume-lib/run-google-java-format.git`) and run the
    scripts from there.
  * Download the
-   [run-google-java-format.py](https://raw.githubusercontent.com/plume-lib/run-google-java-format/master/run-google-java-format.py)
+   [run-google-java-format.py](https://raw.githubusercontent.com/eisop-plume-lib/run-google-java-format/master/run-google-java-format.py)
    or
-   [check-google-java-format.py](https://raw.githubusercontent.com/plume-lib/run-google-java-format/master/check-google-java-format.py)
+   [check-google-java-format.py](https://raw.githubusercontent.com/eisop-plume-lib/run-google-java-format/master/check-google-java-format.py)
    file and run it.  The file will automatically download any additional
    needed files.
 
@@ -75,7 +75,7 @@ if you can create a version that also works on Windows, please contribute it.
 JAVA_FILES_TO_FORMAT ?= $(shell find src -name '*.java' -print | grep -v '\.\#' | grep -v WeakHasherMap.java | grep -v WeakIdentityHashMap.java | grep -v MathMDE.java | sort)
 
 update-run-google-java-format:
-	@[ -d .run-google-java-format ] && (cd .run-google-java-format && git pull -q) || git clone -q https://github.com/plume-lib/run-google-java-format.git .run-google-java-format
+	@[ -d .run-google-java-format ] && (cd .run-google-java-format && git pull -q) || git clone -q https://github.com/eisop-plume-lib/run-google-java-format.git .run-google-java-format
 
 # Requires Java 8
 reformat:
@@ -128,7 +128,7 @@ Then, add this:
           dir=".">
       <arg value="clone"/>
       <arg value="-q"/>
-      <arg value="https://github.com/plume-lib/run-google-java-format.git"/>
+      <arg value="https://github.com/eisop-plume-lib/run-google-java-format.git"/>
       <arg value=".run-google-java-format"/>
     </exec>
   </target>
@@ -185,7 +185,7 @@ task getCodeFormatScripts {
     def rgjfDir = "$projectDir/.run-google-java-format"
     if (! new File(rgjfDir).exists()) {
       exec {
-        commandLine 'git', 'clone', '--filter=tree:0', "https://github.com/plume-lib/run-google-java-format.git", rgjfDir
+        commandLine 'git', 'clone', '--filter=tree:0', "https://github.com/eisop-plume-lib/run-google-java-format.git", rgjfDir
       }
     } else {
       // Ignore exit value so this does not halt the build when not connected to the Internet.
@@ -254,7 +254,7 @@ task getCodeFormatScripts {
   doLast {
     def rgjfDir = "$projectDir/.run-google-java-format"
     if (! new File(rgjfDir).exists()) {
-      def rgjfGit = Grgit.clone(dir: rgjfDir, uri: 'https://github.com/plume-lib/run-google-java-format.git', depth: 1)
+      def rgjfGit = Grgit.clone(dir: rgjfDir, uri: 'https://github.com/eisop-plume-lib/run-google-java-format.git', depth: 1)
     } else {
       def rgjfGit = Grgit.open(dir: rgjfDir)
       rgjfGit.pull()
